@@ -26,23 +26,41 @@ int main() {
 
     std::cout << staticWelcomeMessage << "\n";
 
+    /*
+    // Print memory addresses
+    std::cout << "[DEBUG INFO]" << std::endl;
+    std::cout << "Address of staticWelcomeMessage variable: " << &staticWelcomeMessage << std::endl;
+    std::cout << "Address of string literal (\"Welcome to the Animal Guesser!\"): " << static_cast<const void*>("Welcome to the Animal Guesser!") << std::endl;
+    ////////////////////////////////////////////////////////////////////////////
+    */
+
     std::cout << "Guess the Animal! (1: Dog, 2: Cat, 3: Bird, 4: Fish)\n";
     std::cout << "Enter 0 to quit.\n";
 
-    AnimalUtil::Animal* mysteryAnimal;
+    AnimalUtil::Animal* mysteryAnimal = new AnimalUtil::Animal();//         <----- Error #1, initialize pointer properly
 
     // Error #1 - see question #1
     std::cout << "The animal is initialized to: " << AnimalUtil::toStr(*mysteryAnimal) << "\n";
     
     // Error #2 - see question #2
-    mysteryAnimal = nullptr;
+    //mysteryAnimal = nullptr;//                                              <----- Error #2, Commented out to fix 
     std::cout << "The animal should initally be nothing: " << AnimalUtil::toStr(*mysteryAnimal) << "\n";
     
     // Error #3 - Figure it out. The error assumes good user behavior. 
     // It has nothing to do with validation checking.
     while (true) {
+        // Creates a new random animal each iteration
         mysteryAnimal =
             new AnimalUtil::Animal(static_cast<AnimalUtil::Animal>(1 + std::rand() % 4));
+        
+        /*
+        // Debug info to help trace pointer issues
+        std::cout << "\n[DEBUG INFO]" << std::endl;
+        std::cout << "Address of pointer variable (&mysteryAnimal): " << &mysteryAnimal << std::endl;
+        std::cout << "Address pointer is pointing to (mysteryAnimal): " << mysteryAnimal << std::endl;
+        std::cout << "Value stored at that address (*mysteryAnimal): " << static_cast<int>(*mysteryAnimal) << " (" << AnimalUtil::toStr(*mysteryAnimal) << ")" << std::endl;
+        ///////////////////////////////////////////////////////////////////////////
+        */
 
         std::cout << "\nYour guess: ";
         int guess = -1;
@@ -63,7 +81,10 @@ int main() {
             std::cout << "Wrong! It was " << AnimalUtil::toStr(*mysteryAnimal) << "\n";
         }
 
+        delete mysteryAnimal;
     }
-    delete mysteryAnimal; 
+    
+    //delete mysteryAnimal; //                                                <----- Error #3, moved inside loop to fix
+
     return 0;
 }
